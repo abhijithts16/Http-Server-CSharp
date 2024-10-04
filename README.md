@@ -9,4 +9,4 @@ This project implements a simple HTTP server that handles various requests using
 - **Gzip compression**: Supports compression when requested via the `Accept-Encoding` header.
 - **Concurrent connections**: Handles multiple client requests simultaneously, responding with appropriate status codes and headers.
 
-This project demonstrates the basic workings of an HTTP server with features like request handling, file I/O, and content compression, making it a good learning tool for understanding HTTP communication and server functionality.
+This project demonstrates the basic workings of an HTTP server with features like request handling, file I/O, and content compression, making it a good learning tool for understanding HTTP communication and server functionality. Please check the HTTP_Server_Usage_Examples.txt file for more details.
