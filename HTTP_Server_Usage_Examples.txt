@@ -1,0 +1,68 @@
+HTTP Server Documentation
+
+1. To Run the Server from the Terminal
+   - Open CMD or Terminal.  
+   - Navigate to the project directory.  
+   - Run the following command:  
+     your_program.sh
+
+2. To Call the Server and Get an HTTP Response
+   - Open another terminal session.  
+   - Use the following  curl  command:  
+      curl -v http://localhost:4221   
+   - You will receive a  200 OK  response.
+
+3.  To Extract and Validate Path URL   
+   - To get a valid path response:  
+      curl -v http://localhost:4221   
+     Expected response:  200 OK .  
+   - To get an invalid path response:  
+      curl -v http://localhost:4221/abcdefg   
+     Expected response:  404 Not Found .
+
+4.  To Respond with Body (Echo Path)   
+   - To echo a message in the response body:  
+      curl -v http://localhost:4221/echo/abc   
+     Expected response:  abc  in the body with  200 OK .
+
+5.  To Send Custom Headers   
+   - To send a User-Agent header:  
+      curl -v --header "User-Agent: foobar/1.2.3" http://localhost:4221/user-agent   
+     Expected response: User-Agent value in the body with  200 OK .
+
+6.  Concurrent Connections   
+   - Open multiple terminals or command prompts and run:  
+      start cmd /c "timeout /t 3 >nul & echo GET / HTTP/1.1 | ncat localhost 4221"   
+     The server will respond to each request with  200 OK .
+
+7.  Return a File   
+   -  First Request (File exists):   
+      echo -n 'Hello, World!' > /tmp/foo   
+      curl -i http://localhost:4221/files/foo   
+     Expected response:  200 OK  with file contents and proper headers.
+   -  Second Request (File does not exist):   
+      curl -i http://localhost:4221/files/non_existant_file   
+     Expected response:  404 Not Found .
+
+8.  Read Request Body (POST to /files/)   
+   - Start the server with a directory:  
+      ./your_program.sh --directory /tmp/   
+   - Send a POST request:  
+      curl -v --data "12345" -H "Content-Type: application/octet-stream" http://localhost:4221/files/file_123   
+     Expected response:  201 Created . A new file will be created in the  /tmp/  directory.
+
+9.  Gzip Encoding   
+   - To send a request with  gzip  encoding:  
+      curl -v -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc   
+     Expected response:  Content-Encoding: gzip  with compressed body.
+   - To test with an invalid encoding:  
+      curl -v -H "Accept-Encoding: invalid-encoding" http://localhost:4221/echo/abc   
+     Expected response: No  Content-Encoding  header, with  200 OK .
+
+10.  Multiple Compression Schemes   
+   -  Valid request with mixed encodings:   
+      curl -v -H "Accept-Encoding: invalid-encoding-1, gzip, invalid-encoding-2" http://localhost:4221/echo/abc   
+     Expected response:  Content-Encoding: gzip  with  200 OK .
+   -  Invalid encodings:   
+      curl -v -H "Accept-Encoding: invalid-encoding-1, invalid-encoding-2" http://localhost:4221/echo/abc   
+     Expected response: No  Content-Encoding  header, with  200 OK .
